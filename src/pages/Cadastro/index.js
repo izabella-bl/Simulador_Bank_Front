@@ -3,32 +3,87 @@ import './cadastro.css';
 import { MdOutlineMail } from "react-icons/md";
 import { HiEye, HiEyeOff } from "react-icons/hi";
 import {  MdLock  } from "react-icons/md";
-
+import axios from '../../api/axios';
+import {useHistory, withRouter} from 'react-router-dom';
+import NavBar from './headerCadastro/headerCadastro';
 
 
 const Cadastro = () =>{
 
+    const maskCPF = (value) => {
+        return value
+          .replace(/\D/g, "")
+          .replace(/(\d{3})(\d)/, "$1.$2")
+          .replace(/(\d{3})(\d)/, "$1.$2")
+          .replace(/(\d{3})(\d{1,2})/, "$1-$2")
+          .replace(/(-\d{2})\d+?$/, "$1");
+    };
+
+    const mask = (value) => {
+        return value
+          .replace(/\D/g, "")
+          .replace(/(\d{3})(\d)/, "$1$2")
+          .replace(/(\d{3})(\d)/, "$1$2")
+          .replace(/(\d{3})(\d{1,2})/, "$1$2")
+          .replace(/(-\d{2})\d+?$/, "$1");
+    };
+
+    const maskOnlyLetters = value => {
+        return value.replace(/[0-9!@#¨$%^&*)(+=._-]+/g,"");
+    };
+
+    let history = useHistory();
+
     const [nome, setNome] = useState("")
     const [sobrenome, setSobrenome] = useState("")
+    const [oldcpf, setOldCpf] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [show, setShow] = useState(false)
- 
+    
+
     const handleClick = (e) => {
        e.preventDefault()
        setShow(!show);
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if(nome != "" && sobrenome != "" && oldcpf != "" && email != "" && password != ""){
+
+            const cpf = mask(oldcpf);
+            await axios
+            .post("/salvar", {nome,sobrenome,cpf,email,password})
+            .then(response => {
+                history.push('/', alert("Cadastrado com sucesso!") );  
+            }).catch( (err) =>{
+                if (!err?.response) {
+                    alert('No Server Response');
+                } else if (err.response?.status === 406) {
+                    alert('CPF ou Email inválido!');
+                } else if(err.response?.status === 400) {
+                    history.push('/', alert('Usuário já existe!') ); 
+                }
+            })
+        }else{
+            alert("Preencha todos os campos!");
+        }   
+
+    }
+
     return(
         <div>
+               <NavBar/>
                 <div className="cadastro">
-                    <div className='div-formulario'>
+                    <form className='div-formulario' onSubmit={handleSubmit}>
                         <h1>Cadastrar</h1> 
                         <label className='LabelCadastro'>Nome</label>
                         <div className="Input">
                                 <input type="text" 
                                 placeholder="Nome"
                                 value={nome}
-                                onChange={e => setNome(e.target.value)}
+                                onChange={e => setNome(maskOnlyLetters(e.target.value))}
                                 ></input>
                             
                             </div>
@@ -38,7 +93,7 @@ const Cadastro = () =>{
                                 <input type="text" 
                                 placeholder="Sobrenome"
                                 value={sobrenome}
-                                onChange={e => setSobrenome(e.target.value)}
+                                onChange={e => setSobrenome(maskOnlyLetters(e.target.value))}
                                 ></input>
                             
                             </div>
@@ -48,8 +103,8 @@ const Cadastro = () =>{
                                 <MdOutlineMail/>
                                 <input type="text" 
                                 placeholder="Ex:Aline@gmail.com"
-                                value={sobrenome}
-                                onChange={e => setSobrenome(e.target.value)}
+                                value={email}
+                                onChange={e => setEmail(e.target.value)}
                                 ></input>
                             </div>
 
@@ -57,8 +112,8 @@ const Cadastro = () =>{
                             <div className="Input ">
                                 <input type="text" 
                                 placeholder="Ex:000.000.000-00"
-                                value={sobrenome}
-                                onChange={e => setSobrenome(e.target.value)}
+                                value={oldcpf}
+                                onChange={e => setOldCpf(maskCPF(e.target.value))}
                                 ></input>
                             </div>
 
@@ -87,7 +142,7 @@ const Cadastro = () =>{
                             </div>
                             
                             <button type="submit">Cadastrar</button>
-                    </div>
+                    </form>
                 
             </div>
 
@@ -97,4 +152,4 @@ const Cadastro = () =>{
 };
 
 
-export default Cadastro;
+export default withRouter(Cadastro);

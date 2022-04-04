@@ -6,13 +6,25 @@ import { ImExit} from "react-icons/im";
 import { AiFillHome} from "react-icons/ai";
 import { GiPayMoney,GiReceiveMoney} from "react-icons/gi";
 import{MdOutlineHelp}  from "react-icons/md";
-
+import {logout} from './hooks/useAuth';
+import{ useHistory} from "react-router-dom";
 
 const Header = (props) =>{
+    
+    let history = useHistory();
     const [show, setShow] = useState(false);
+
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+
+
+    
+    const handleLogout = async () => {      
+        logout();
+        history.push("/");
+    }
+
 
     return(
         <Navbar className="navbar-dark" bg="dark" expand="lg">
@@ -35,9 +47,9 @@ const Header = (props) =>{
                                 <Nav.Link href="#action2"><FaUserCircle style={{ paddingRight:"5px", width: '30px'}}/>Perfil</Nav.Link>
                                 <Nav.Link href="/transferir"><GiPayMoney style={{ paddingRight:"5px", width: '30px'}}/>Transferir</Nav.Link>
                                 <Nav.Link href="#action2"><GiReceiveMoney style={{ paddingRight:"5px", width: '30px'}}/>Receber</Nav.Link>
-                                <Nav.Link href="#action2"><IoIosListBox style={{ paddingRight:"5px", width: '30px'}}/>Extrato</Nav.Link>
+                                <Nav.Link href="/extrato"><IoIosListBox style={{ paddingRight:"5px", width: '30px'}}/>Extrato</Nav.Link>
                                 <Nav.Link href="#action2"><MdOutlineHelp style={{ paddingRight:"5px", width: '30px'}}/>Ajuda</Nav.Link>
-                                <Button variant="danger">Sair <ImExit/></Button> 
+                                <Button variant="danger" onClick={handleLogout}>Sair <ImExit/></Button> 
                             </Nav>
                         </Offcanvas.Body>
                     </Offcanvas> 

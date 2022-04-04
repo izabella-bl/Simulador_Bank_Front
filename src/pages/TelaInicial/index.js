@@ -1,21 +1,34 @@
-import React , {useState} from "react";
+import React , {useState, useEffect } from "react";
 import "./home.css"
 import Header from '../../header'
 import {  IoIosListBox} from "react-icons/io";
 import { GiPayMoney,GiReceiveMoney} from "react-icons/gi";
 import { HiEye, HiEyeOff } from "react-icons/hi"
+import axios from '../../api/axios';
 
 
 function TelaInicial(){
     
-    const [password, setPassword] = useState("")
-
+    const [saldo, setSaldo] = useState(false)
     const [show, setShow] = useState(false)
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    const id = user.id;
  
     const handleClick = (e) => {
        e.preventDefault()
        setShow(!show);
     }
+
+    useEffect((e) => {
+
+        axios.get("/home/"+id).then(response =>{
+            setSaldo(response.data.conta.saldo);
+        }).catch(err =>{
+            alert(err)
+        })
+        
+    });
  
     return(
          <div>
@@ -25,12 +38,11 @@ function TelaInicial(){
                         <div className="loginInputSaldo">
                         <div className="cifrao">R$</div>
                         <input 
-                        placeholder="Digite sua senha"
                         type={show ? "text" : "password"}
-                        value="0,00"
-                        onChange={e => setPassword(e.target.value)}></input>
+                        value={saldo}
+                        ></input>
 
-                    <div className="login-eye">
+                    <div className="login-eye2">
                         {show ? (
                             <HiEye
                                 size={20}
@@ -48,30 +60,30 @@ function TelaInicial(){
                 
 
                 <div className="divCards">
-                    <main class="cards">
-                        <section class="card contact">
-                            <div class="icon">
+                    <main className="cards">
+                        <section className="card contact">
+                            <div className="icon">
                                 <GiPayMoney  style={{width:"100%" ,height:"90px",color:"#9F66FF"}}/>
                             </div>
                             <h3>Transferência</h3>
                             <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                            <button>Transferir</button>
+                            <a href="/transferir">Transferir</a>
                         </section>
-                        <section class="card shop">
-                            <div class="icon">
+                        <section className="card shop">
+                            <div className="icon">
                                 <GiReceiveMoney style={{width:"100%" ,height:"90px",color:"#3E8AFF"}}/>
                             </div>
                             <h3>Receber</h3>
                             <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                            <button>Receber</button>
+                            <a href="#">Receber</a>
                         </section>
-                        <section class="card about">
-                            <div class="icon">
+                        <section className="card about">
+                            <div className="icon">
                                 <IoIosListBox style={{width:"100%" ,height:"90px",color:"#FE5F8F"}}/>
                             </div>
                             <h3>Extrato</h3>
                             <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</span>
-                            <button>Extrato</button>
+                            <a href="Extrato">Extrato</a>
                         </section>
                     </main>
                 </div>

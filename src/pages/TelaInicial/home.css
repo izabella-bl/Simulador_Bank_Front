@@ -58,7 +58,7 @@ main.cards section.card span {
     margin-bottom: 16px;
 }
 
-main.cards section.card button {
+main.cards section.card a {
     padding: 0.5rem 1rem;
     text-transform: uppercase;
     border-radius: 32px;
@@ -70,13 +70,13 @@ main.cards section.card button {
     margin-bottom: 16px 0;
 }
 
-main.cards section.card.contact button {
+main.cards section.card.contact a {
     background: linear-gradient(to right, #9F66FF, #DFCBFF);
 }
-main.cards section.card.shop button {
+main.cards section.card.shop a {
     background: linear-gradient(to right, #3E8AFF, #BBDEFF);
 }
-main.cards section.card.about button {
+main.cards section.card.about a {
     background: linear-gradient(to right, #FE5F8F, #FFC7D9);
 }
 
@@ -140,7 +140,7 @@ main.cards section.card.about {
     margin-right: 10px;
 }
 
-.login-eye {
+.login-eye2 {
     align-items: center;
     justify-content: center;
     font-size: 30;
